@@ -8,6 +8,7 @@ from wordcloud import WordCloud
 import geopandas as gpd
 import folium
 from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.feature_extraction.text import CountVectorizer 
 
 # Título
 st.title('O papel da Ciência de Dados nos Avanços dos Cuidados de Saúde')
@@ -375,25 +376,46 @@ elif menu == "Análise de Conteúdo":
             Abaixo estão os tópicos identificados e os seus termos mais relevantes.
         """)
 
-        # Exibindo os tópicos LDA
-        df_lda_topics.columns = [f'Topic {i+1}' for i in range(len(df_lda_topics.columns))]
-        for i in range(1, 11):  # Para os 10 tópicos
-            # Acessa a coluna de cada tópico, deve garantir que os nomes das colunas estão como 'Topic 1', 'Topic 2', etc.
-            topic_column = df_lda_topics[f'Topic {i}']
-            
-            # Obter os termos (índice da coluna) e as suas frequências (valores)
-            terms = topic_column.index.tolist()
-            frequencies = topic_column.values.tolist()
+        # Criar o modelo de contagem de palavras
+        count_vectorizer = CountVectorizer(stop_words='english')
+        X_count = count_vectorizer.fit_transform(df_limpo['clean_Abstract'])
 
-            # Criando o gráfico de barras com os tópicos
-            fig_lda = px.bar(x=terms, y=frequencies, 
-                            labels={'x': 'Frequência', 'y': 'Termos'},  # Mudamos 'y' para 'Frequência'
-                            title=f'Tópico {i} - ')  # Mudamos 'Word' para 'Tópico'
-            
-            # Ajuste na cor das barras (opcional)
-            fig_lda.update_traces(marker_color='#00CED1')  # Cor para as barras
-            
-            # Exibe o gráfico de barras para o tópico atual
+        # Definir o número de tópicos
+        n_topics = 10  # Número de tópicos que você quer
+        lda = LatentDirichletAllocation(n_components=n_topics, random_state=42)
+
+        # Treinar o modelo LDA
+        lda.fit(X_count)
+
+        # Obter os termos (palavras) mais relevantes para cada tópico
+        feature_names = count_vectorizer.get_feature_names_out()
+        n_words = 10  # Número de palavras a exibir por tópico
+
+        # Criar lista de tópicos com palavras mais relevantes
+        topics = []
+        for topic_idx, topic in enumerate(lda.components_):
+            topic_words = [feature_names[i] for i in topic.argsort()[:-n_words - 1:-1]]
+            topics.append(topic_words)
+
+            # Criar um DataFrame com os tópicos
+            df_topics = pd.DataFrame(topics, columns=[f"Word {i+1}" for i in range(n_words)])
+
+            # Mostrar os tópicos como uma tabela
+            st.dataframe(df_topics)
+
+        # Gerar os gráficos de barras para cada tópico usando Plotly
+        for topic_idx, topic in enumerate(lda.components_):
+            # Obter as palavras mais relevantes para o tópico
+            top_words_idx = topic.argsort()[:-n_words - 1:-1]
+            top_words = [feature_names[i] for i in top_words_idx]
+            top_words_scores = [topic[i] for i in top_words_idx]
+
+            # Criar o gráfico de barras usando Plotly
+            fig_lda = px.bar(x=top_words, y=top_words_scores,
+                            labels={'x': 'Palavras', 'y': 'Relevância'},
+                            title=f'Tópico {topic_idx + 1} - Termos Relevantes')
+
+            # Exibir o gráfico na interface
             st.plotly_chart(fig_lda)
 
 
