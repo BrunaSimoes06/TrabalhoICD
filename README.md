@@ -88,6 +88,9 @@ Nota: Na pasta zip tem o ficheiro em formato .ipynb e .html
       ```
     - Execute o código de análise bibliométrica no arquivo analise_bibliometrica.ipynb.
 
+### Análise de Conteúdo
+A análise de conteúdo identifica padrões e tópicos relevantes nos textos, proporcionando insights qualitativos e quantitativos sobre os dados processados.
+
 2. **Execute a Análise de Conteúdo**:
     - Se ainda tiver no Jupyter Notebook poderá também encontrar o ficheiro .ipynb da Análise de Conteúdo, realize as etapas de pré-processamento e análise de conteúdo conforme indicado no notebook.
     - Caso não tenha aberto, reabra através:
@@ -100,6 +103,8 @@ Nota: Na pasta zip tem o ficheiro em formato .ipynb e .html
 
     - Neste código é também descarregado os ficheiros em formato .csv dos dados limpos, o top 10 de termos do TF-IDF e os topicos da LDA para facilitar na execução da dashboard.
 
+### Dashboard
+A dashboard interativa apresenta de forma visual os resultados das análises, permitindo explorar tendências e métricas de forma intuitiva.
 
 3. **Execução da Dashboard**
 A dashboard foi desenvolvida utilizando o Streamlit para apresentar visualmente os resultados das análises bibliométrica e de conteúdo.
