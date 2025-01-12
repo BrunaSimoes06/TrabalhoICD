@@ -378,23 +378,23 @@ elif menu == "Análise de Conteúdo":
         # Exibindo os tópicos LDA
         df_lda_topics.columns = [f'Topic {i+1}' for i in range(len(df_lda_topics.columns))]
         for i in range(1, 11):  # Para os 10 tópicos
-        # Acessa a coluna de cada tópico, deve garantir que os nomes das colunas estão como 'Topic 1', 'Topic 2', etc.
+            # Acessa a coluna de cada tópico, deve garantir que os nomes das colunas estão como 'Topic 1', 'Topic 2', etc.
             topic_column = df_lda_topics[f'Topic {i}']
-        
-        # Obter os termos (índice da coluna) e as suas frequências (valores)
-        terms = topic_column.index.tolist()
-        frequencies = topic_column.values.tolist()
+            
+            # Obter os termos (índice da coluna) e as suas frequências (valores)
+            terms = topic_column.index.tolist()
+            frequencies = topic_column.values.tolist()
 
-        # Criando o gráfico de barras com os tópicos
-        fig_lda = px.bar(x=terms, y=frequencies, 
-                         labels={'x': 'Frequência', 'y': 'Termos'},  # Mudamos 'y' para 'Frequência'
-                         title=f'Tópico {i} - Termos Relevantes')  # Mudamos 'Word' para 'Tópico'
-        
-        # Ajuste na cor das barras (opcional)
-        fig_lda.update_traces(marker_color='#00CED1')  # Cor para as barras
-        
-        # Exibe o gráfico de barras para o tópico atual
-        st.plotly_chart(fig_lda)
+            # Criando o gráfico de barras com os tópicos
+            fig_lda = px.bar(x=terms, y=frequencies, 
+                            labels={'x': 'Frequência', 'y': 'Termos'},  # Mudamos 'y' para 'Frequência'
+                            title=f'Tópico {i} - ')  # Mudamos 'Word' para 'Tópico'
+            
+            # Ajuste na cor das barras (opcional)
+            fig_lda.update_traces(marker_color='#00CED1')  # Cor para as barras
+            
+            # Exibe o gráfico de barras para o tópico atual
+            st.plotly_chart(fig_lda)
 
 
         
